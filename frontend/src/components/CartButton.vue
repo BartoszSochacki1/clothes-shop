@@ -1,11 +1,12 @@
 <script setup>
 import { useCartStore } from "../stores/cart";
 import Button from "./Button.vue";
-
+import {useIsAuthenticated} from '../useAuth.js'
 const cartStore = useCartStore();
+const {isAuthenticated, toggle} = useIsAuthenticated();
 </script>
 <template>
-    <div style="position: relative">
+  <div v-if="isAuthenticated" style="position: relative">
         <router-link :to="{ name: 'cart' }">
             <Button>
                 <template #body>

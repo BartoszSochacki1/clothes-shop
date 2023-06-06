@@ -2,7 +2,14 @@
 import Logo from "./Logo.vue";
 import SearchInput from "./SearchInput.vue";
 import CartButton from "./CartButton.vue"
+import Button from "./Button.vue"
+import { ref } from "vue";
+import {userService} from "../services/user.service.js"
+import {useIsAuthenticated} from '../useAuth.js'
+const {isAuthenticated} = useIsAuthenticated();
 </script>
+
+
 <template>
     <div class="header">
         <Logo></Logo>
@@ -11,6 +18,21 @@ import CartButton from "./CartButton.vue"
                 <SearchInput></SearchInput>
             </div>
             <CartButton />
+            <Button v-if="!isAuthenticated" @click="navigateToLogin()">            
+                <template #body>
+                    <p>ZALOGUJ</p>
+                </template>
+            </Button>
+            <Button v-if="isAuthenticated" @click="logoutRedirect()">            
+                <template #body> 
+                    <p>WYLOGUJ</p>
+                </template>
+            </Button>
+            <Button v-if="!isAuthenticated" @click="navigateToRegister()">            
+                <template #body>
+                    <p>ZAREJESTRUJ</p>
+                </template>
+            </Button>
         </div>
     </div>
 </template>
@@ -32,3 +54,20 @@ import CartButton from "./CartButton.vue"
     margin-right: 20px;
 }
 </style>
+
+<script>
+export default {
+    methods: {
+        navigateToLogin() {
+            this.$router.push('/login');
+        },
+        navigateToRegister() {
+            this.$router.push('/register');
+        },
+        logoutRedirect(){
+            userService.logout();
+            this.$router.push('/all');
+        }
+    }
+};
+</script>
